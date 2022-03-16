@@ -1,50 +1,120 @@
-#include<iostream>
-#include<stdio.h>
-#define MAX 8
+#include<iostream> 
+#include<cstring>
 using namespace std;
 
-int A[MAX][MAX] = { 0 };
-int X[8] = { -2,-2,-1,-1, 1, 1, 2, 2 };
-int Y[8] = { -1, 1,-2, 2,-2, 2,-1, 1 };
-int s = 0;
-int n;
+#define BUFFER_SIZE 1024
+#define WORDS_BUFFER_SIZE 64
+#define WORD_DELIMINITERS " "
 
-void output() {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++)
-            cout << " " << A[i][j];
-        cout << endl;
+
+/*
+    Read the line 
+*/
+char *read_line(){
+    int pos = 0;
+    int current_buffer_size = BUFFER_SIZE;
+    char *buffer = (char*)malloc(sizeof(char) * current_buffer_size);
+    int c; 
+
+    // Fail to allocate memory to the buffer
+    if(! buffer){
+        cout << "Allocation Error!" << endl;
+        exit(1);
     }
-    cout << endl;
-}
 
-void move(int x, int y) {
-    ++s;
-    A[x][y] = s;
-    for (int i = 0; i < 8; i++) {
-       
-        if (s == n * n) {
-            cout << "steps: \n";
-            output();
-            exit(0);
+    // Read characters until the "\n" or "EOF" (end of file) 
+    while(1){
+        c = getchar();
+        if(c == '\n'){
+            buffer[pos] = '\0';
+            return buffer;
         }
-       
-        int u = x + X[i];
-        int v = y + Y[i];
-       
-        if (u >= 0 && u < n && v >= 0 && v < n && A[u][v] == 0)
-            move(u, v);
+        else{
+            buffer[pos] = c;
+        }
+        pos++;
+
+        // Reallocate if the line is too long
+        if(pos >= BUFFER_SIZE){
+            current_buffer_size += BUFFER_SIZE;
+            buffer = (char*)realloc(buffer, current_buffer_size);
+            if(! buffer){
+                cout << "Allocation error!" << endl;
+                exit(1);
+            }
+        }
     }
-   
-    --s;
-    A[x][y] = 0;
 }
-int main() {
-    cout << "enter n: ";
-    cin >> n;
-    int a, b;
-    cout << "enter original location\nx: ";
-    cin >> a;
-    cout << "y: ";
-    cin >> b;
-   move(a, b);
+
+/*
+    Split the line into separated words
+*/
+char **split_line(char *line){
+    int current_buffer_size = WORDS_BUFFER_SIZE;
+    int pos = 0;
+    char **words = (char**)malloc(sizeof(char*) * current_buffer_size);
+    char *word;
+
+    if(!words){
+        cout << "Allocation error!" << endl;
+        exit(1);
+    }
+
+    word = strtok(line, WORD_DELIMINITERS);
+    while(word != NULL){
+        words[pos] = word;
+        pos++;
+
+        if(pos >= current_buffer_size){
+            current_buffer_size += WORDS_BUFFER_SIZE;
+            words = (char**)realloc(words, current_buffer_size * sizeof(char*));
+            if(!words){
+                cout << "Allocation Error !" << endl;
+                exit(1);
+            }
+        }
+
+        word = strtok(NULL, WORD_DELIMINITERS);
+    }
+    words[pos] = NULL;
+    return words; 
+}
+
+
+int main(){
+    char* line; 
+    char** words;
+    int current_buffer_size = BUFFER_SIZE;
+    char* target = (char*)malloc(current_buffer_size*sizeof(char));
+    int pos = 0;
+
+    cout << "Enter the line: " << endl;
+
+    // Read the line
+    line = read_line();
+
+    // Parse the line 
+    words = split_line(line);
+
+    // Concatenate the words
+    while(words[pos] != NULL){
+        // If the target string needs more memory
+        if(strlen(target) + strlen(words[pos]) >= current_buffer_size){
+            current_buffer_size += BUFFER_SIZE;
+            target = (char*)realloc(target, current_buffer_size * sizeof(char));
+        }
+
+        cout << words[pos] << endl;
+        strcat(target, words[pos]);
+        strcat(target, " ");
+        // Duplicate the word if it starts with the letter A or a
+        if(words[pos][0] == 'A' || words[pos][0] == 'a'){
+            strcat(target, words[pos]);
+            strcat(target, " ");
+        }
+        pos++;
+    }
+
+    cout << target << endl;
+    return 0;
+}
