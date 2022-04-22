@@ -32,6 +32,10 @@ void positivenumbers() {
         if (x > 0)
         {
         cout << x << " ";
+        
+        else
+        {
+        cout << "no positive element";
         }
 }
 int main()
