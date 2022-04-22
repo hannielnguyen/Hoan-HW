@@ -36,6 +36,7 @@ void positivenumbers() {
         else
         {
         cout << "no positive element";
+        break;
         }
 }
 int main()
