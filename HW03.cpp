@@ -1,53 +1,79 @@
-#include<iostream>
-#include<vector>
-#define MAX 8
+#include <iostream>
+#include <vector>
+#include "chess.h"
 using namespace std;
+using namespace chess;
 
-int A[MAX][MAX] = { 0 };
-int X[8] = { -2,-2,-1,-1, 1, 1, 2, 2 };
-int Y[8] = { -1, 1,-2, 2,-2, 2,-1, 1 };
-int s = 0;
-int n;
-
-void output() {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++)
-             cout << " " << A[i][j];
-         cout << endl;
-         }
-    cout << endl;
-    }
-
-void move(int x, int y) {
-    ++s;
-    A[x][y] = s;
-    for (int i = 0; i < 8; i++) {
-
-        if (s == n * n) {
-            cout << "steps: \n";
-            output();
-            exit(0);
-        }
-
-        int u = x + X[i];
-        int v = y + Y[i];
-        if (u >= 0 && u < n && v >= 0 && v < n && A[u][v] == 0)
-            move(u, v);
-    }
-
-    --s;
-    A[x][y] = 0;
+bool chess::in_scope(posion p)
+{
+    return p.column >= 1 && p.column <= 8 && p.row >= 1 &&  p.row <= 8;
 }
-int main() {
-    cout << "enter n: ";
-    cin >> n;
-    int a, b;
-    cout << "enter original location\nx: ";
-    cin >> a;
-    cout << "y: ";
-    cin >> b;
-    move(a, b);
 
-    cout << "Can't find the way.";
+void chess::show_moves(posion p)
+{
+    cout << "All available moves:\n";
+    vector<posion> vp = {
+        move_two_left_one_up(p),
+        move_one_left_two_up(p),
+        move_one_right_two_up(p),
+        move_two_right_one_up(p),
+        move_two_right_one_down(p),
+        move_one_right_two_down(p),
+        move_two_left_one_down(p),
+        move_one_left_two_down(p)
+    };
+
+    for (posion x : vp)
+        if (in_scope(x))
+            cout << "(" << x.column << "," << x.row << ")\n";
 }
- 
+
+
+posion chess::move_two_left_one_up(posion p)
+{
+    posion pn = {.column=p.column-2, .row=p.row+1};
+    return pn;
+}
+
+posion chess::move_one_left_two_up(posion p)
+{
+    posion pn = {.column=p.column-1, .row=p.row+2};
+    return pn;
+}
+
+posion chess::move_one_right_two_up(posion p)
+{
+    posion pn = {.column=p.column+1, .row=p.row+2};
+    return pn;
+}
+
+posion chess::move_two_right_one_up(posion p)
+{
+    posion pn = {.column=p.column+2, .row=p.row+1};
+    return pn;
+}
+
+posion chess::move_two_right_one_down(posion p)
+{
+    posion pn = {.column=p.column+2, .row=p.row-1};
+    return pn;
+}
+
+posion chess::move_one_right_two_down(posion p)
+{
+    posion pn = {.column=p.column+1, .row=p.row-2};
+    return pn;
+}
+
+posion chess::move_one_left_two_down(posion p)
+{
+    posion pn = {.column=p.column-1, .row=p.row-2};
+    return pn;
+}
+
+posion chess::move_two_left_one_down(posion p)
+{
+    posion pn = {.column=p.column-2, .row=p.row-1};
+    return pn;
+}
+© 
