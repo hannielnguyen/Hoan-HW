@@ -1,3 +1,8 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//HW7
 struct fraction {
 	int a;
 	int b;
@@ -12,7 +17,7 @@ struct fraction {
 };
 
 void reduction(fraction& x) {
-	cout << "fraction reduction :" << (x.a / x.GCD(x.a,x.b)) << "/" << (x.b / x.GCD(x.a,x.b));
+	cout << (x.a / x.GCD(x.a,x.b)) << "/" << (x.b / x.GCD(x.a,x.b));
 }
 void input(int* a, int& n) {
 	for (int i = 0; i < n; i++) {
@@ -32,21 +37,27 @@ void swap(int& a, int& b) {
 }
 
 void sort(int* a, int& n) {
-	for (int i = 0; i < n-1; i++) {
-		if (a[i] > a[i + 1]) {
-			swap(a[i], a[i + 1]);
+	for (int i = 0; i < n; i++) {
+		for (int j = i + 1; j < n; j++) {
+			if (a[i] > a[j]) swap(a[i], a[j]);
 		}
 	}
 }
 int main() {
 	int n;
+	cout << "Enter n:" << endl;
 	cin >> n;
 	int* a = new int[n];
+	cout << "Enter Array:" << endl;
 	input(a, n);
 	sort(a, n);
+	cout << "Sorted Array:" << endl;
 	output(a, n);
 	delete[]a;
+	//
 	fraction x;
+	cout << "\nEnter numerator & denominator :" << endl;
 	cin >> x.a >> x.b;
+	cout << "Fraction reduction :";
 	reduction(x);
 }
