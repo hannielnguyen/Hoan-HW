@@ -2,15 +2,10 @@
 #include<string> 
 using namespace std;
 
-
-struct User
-{
-    string login;
-    string password;
-};
-
 bool request(string login)
 {
+    string user_login = "Hoan_Nguyen";
+    string user_password = "1506";
     string password;
     int counter = 1;
     cout << "Enter password" << endl;
@@ -37,16 +32,13 @@ bool request(string login)
 }
 int main()
 {
-    User us;
-    us.login = "Hoan_Nguyen";
-    us.password = "1506";
     try
     {
         bool result;
         string login;
         cout << "Enter login information" << endl;
         cin >> login;
-        result = request(login, us.login, us.password);
+        result = request(login);
         if (result == true)
         {
             cout << "Congratulations, you've entered" << endl;
