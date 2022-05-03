@@ -9,7 +9,7 @@ struct User
     string password;
 };
 
-bool request(string login, string user_login, string user_password)
+bool request(string login)
 {
     string password;
     int counter = 1;
